@@ -29,24 +29,27 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 
     }
     public static ArrayList<usuario> usuarios = new ArrayList<>();
-    public static boolean insertNewUser(){
+    public static boolean añadirNuevoUsuario(String idUsuario, Juego juego) throws userException, SQLException {
+
         try {
             Statement st = conn.createStatement();
+            st.executeUpdate("INSERT INTO datos (IdUsuario, juegos)"
+                                + "VALUES ("+ idUsuario+ " , '[]'); ");
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-
         }
-
-
-
-
-
+        añadirJuegoATabla(juego, idUsuario);
         return true;
         }
         //TODO: Funcion para verificar si ya existe el juego que se intenta añadir
-        public static boolean revisarSiJuegoExisteEnTabla(){
-        return true;
+        public static boolean revisarSiJuegoExisteEnTabla(ArrayList<Juego> juegos, Juego juego){
+        for(Juego x : juegos){
+            if(x.idJuego == juego.idJuego){
+                return true;
+            }
+        }
+        return false;
         }
 
         public static ArrayList<Juego> getJuegosDelUsuario(String IDUsuario) throws SQLException {
@@ -58,7 +61,7 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
             IO.println(jsonArr.size());
             for(JsonElement je:jsonArr){
                 JsonObject obj = je.getAsJsonObject();
-                String nombre = obj.get("\"nombre\"").getAsString();
+                String nombre = obj.get("nombre").getAsString();
                 int idJuego = obj.get("idJuego").getAsInt();
                 float precio = obj.get("precioActual").getAsFloat();
                 int idtienda = obj.get("idtienda").getAsInt();
@@ -68,8 +71,9 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
             }
             return juegos;
         }
-        public static boolean añadirJuegoATabla(Juego juego, String idUsuario) throws SQLException {
+        public static boolean añadirJuegoATabla(Juego juego, String idUsuario) throws SQLException, userException{
         ArrayList<Juego> juegos = getJuegosDelUsuario(idUsuario);
+        if(revisarSiJuegoExisteEnTabla(juegos, juego)) throw new userException("Ya tienes este juego en tu lista de seguimiento");
         juegos.add(juego);
         String json = new Gson().toJson(juegos);
         IO.println(json);

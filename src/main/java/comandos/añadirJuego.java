@@ -1,11 +1,11 @@
 package comandos;
 
 import api.CurlRequest;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import sqlite.Juego;
 import sqlite.sqliteDrivers;
+import sqlite.userException;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -30,7 +30,8 @@ public class añadirJuego {
         }
         return false;
     }
-    //TODO: Puede que no necesite esta funcion
+    //TODO Puede que no necesite esta funcion
+
 //    private static Juego buscarDatosJuego(int idJuego) throws IOException {
 //        String request = CurlRequest.curlRequests("https://www.cheapshark.com/api/1.0/games?id=" + idJuego);
 //        JsonObject jsonObject = JsonParser.parseString(request).getAsJsonObject();
@@ -46,12 +47,15 @@ public class añadirJuego {
 //
 //    }
 
-    public static Juego getDatosJuego(String juego) throws IOException {
+    public static Juego getDatosJuego(String juego) throws IOException, sqlite.apiException {
         String request = CurlRequest.curlRequests("https://www.cheapshark.com/api/1.0/games?title=" + juego);
         IO.println(request);
-        if(request.contains("[]")){
 
-        }
+            if(request.contains("[]")){
+                throw new sqlite.apiException("Llamada a Api retorno arreglo vacio");
+            }
+
+
 
         JsonObject jsonObject = JsonParser.parseString(request).getAsJsonArray().get(0).getAsJsonObject();
         int idjuego  =jsonObject.get("gameID").getAsInt();
@@ -61,12 +65,19 @@ public class añadirJuego {
         return new Juego(nombre,idjuego,precio,0,dealId);
     }
     public static String comandoAñadirJuego(String str, String IDUsuario) throws IOException, SQLException {
-        Juego jg = getDatosJuego(str);
-        if(revisarSiUsuarioExiste(IDUsuario)){
-            sqliteDrivers.añadirJuegoATabla(jg,IDUsuario);
-
+        Juego jg;
+        try{
+            jg = getDatosJuego(str);
+        }catch (sqlite.apiException e){
+            return "Has realizado demasiadas peticiones recientemente, espera un poco y vuelve a intentarlo\n";
         }
-        return "Juego agregado a tu lista de seguimiento.\n" +
+        try {
+            if (revisarSiUsuarioExiste(IDUsuario)) sqliteDrivers.añadirJuegoATabla(jg, IDUsuario);
+            else sqliteDrivers.añadirNuevoUsuario(IDUsuario, jg);
+        } catch (userException e) {
+            return e.getMessage();
+        }
+                return "Juego agregado a tu lista de seguimiento.\n" +
                 "Recibirás alertas cuando baje de precio.";
     }
 
