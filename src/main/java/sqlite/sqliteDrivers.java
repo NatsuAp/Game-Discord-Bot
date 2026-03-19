@@ -28,7 +28,7 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 
 
     }
-    public static ArrayList<usuario> usuarios = new ArrayList<>();
+
     public static boolean añadirNuevoUsuario(String idUsuario, Juego juego) throws userException, SQLException {
 
         try {
@@ -42,7 +42,7 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
         añadirJuegoATabla(juego, idUsuario);
         return true;
         }
-        //TODO: Funcion para verificar si ya existe el juego que se intenta añadir
+
         public static boolean revisarSiJuegoExisteEnTabla(ArrayList<Juego> juegos, Juego juego){
         for(Juego x : juegos){
             if(x.idJuego == juego.idJuego){
@@ -52,7 +52,20 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
         return false;
         }
 
-        public static ArrayList<Juego> getJuegosDelUsuario(String IDUsuario) throws SQLException {
+        public static ArrayList<Usuario> obtenerUsuarios() throws SQLException {
+        ArrayList<Usuario> usuarios= new ArrayList<>();
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery("SELECT idUsuario FROM datos");
+            String IDusuario="";
+
+        while (rs.next()) {
+            IDusuario = rs.getString("idUsuario");
+
+            usuarios.add(new Usuario(IDusuario, obtenerJuegosDelUsuario(IDusuario)));
+        }
+        return usuarios;
+        }
+        public static ArrayList<Juego> obtenerJuegosDelUsuario(String IDUsuario) throws SQLException {
         ArrayList<Juego> juegos = new ArrayList<>();
         Statement st = conn.createStatement();
         ResultSet rs =  st.executeQuery("select juegos from datos where idUsuario="+ "'" +IDUsuario+ "'");
@@ -71,8 +84,17 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
             }
             return juegos;
         }
+
+        public static void actualizarJuegosTabla(ArrayList<Juego> juegos, String idUsuario) throws SQLException {
+            String json = new Gson().toJson(juegos);
+
+                Statement st = conn.createStatement();
+                st.executeUpdate("UPDATE datos SET juegos = '" + json + "'" + "WHERE IdUsuario = '" + idUsuario + "';");
+
+
+        }
         public static boolean añadirJuegoATabla(Juego juego, String idUsuario) throws SQLException, userException{
-        ArrayList<Juego> juegos = getJuegosDelUsuario(idUsuario);
+        ArrayList<Juego> juegos = obtenerJuegosDelUsuario(idUsuario);
         if(revisarSiJuegoExisteEnTabla(juegos, juego)) throw new userException("Ya tienes este juego en tu lista de seguimiento");
         juegos.add(juego);
         String json = new Gson().toJson(juegos);

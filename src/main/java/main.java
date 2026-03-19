@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.util.Collections;
 
+import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 //
 //Commands.slash("precio", "Busca el precio del sqlite.juego")
@@ -39,7 +40,11 @@ public class main{
                 Commands.slash("precio", "Busca el precio del sqlite.juego")
                         .addOption(STRING, "juego", "Que sqlite.juego desea buscar", true),
                 Commands.slash("añadirjuego", "Añade un juego a tu lista personal")
-                        .addOption(STRING, "juego", "Juego a añadir a tu lista personal", true)
+                        .addOption(STRING, "juego", "Juego a añadir a tu lista personal", true),
+                Commands.slash("listarjuegos", "Listar juegos de tu lista personal"),
+                Commands.slash("eliminarjuego", "Ingresa el indice o el nombre del juego que desees eliminar de tu lista")
+                        .addOption(STRING, "juego", "Nombre (exacto) del juego en tu lista personal que deseas eliminar", false)
+                        .addOption(INTEGER, "indice", "Indice en tu lista personal de el juego a eliminar", false)
         );
 
 

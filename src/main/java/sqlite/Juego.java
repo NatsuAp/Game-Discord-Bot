@@ -6,6 +6,7 @@ public class Juego {
     float precioActual= 0f;
     int idtienda=0;
     String idLink="";
+
     public Juego(String nombre, int idJuego, float precioActual, int idtienda, String idLink) {
         this.nombre = nombre;
         this.idJuego= idJuego;
@@ -13,6 +14,10 @@ public class Juego {
         this.idtienda =  idtienda;
         this.idLink = idLink;
     }
+    public String getNombre(){
+        return this.nombre;
+    }
+
 
 
 }
