@@ -19,7 +19,7 @@ public class crearJDA {
         jda = JDABuilder
                 .createLight(main.dotenv.get("BOT_TOKEN"), Collections.emptyList())
                 .enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
-                .setActivity(Activity.playing("hola"))
+                .setActivity(Activity.playing("Analizando precios"))
                 .addEventListeners(new SlashCommandListener())
                 .build();
 

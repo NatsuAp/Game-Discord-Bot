@@ -16,9 +16,8 @@ import java.util.HashMap;
 //Descuento: 50%
 //Tienda: Steam
 public class precio {
-
+    public static HashMap<String, String> storeMap;
     public static String comandoPrecio(String str) throws IOException {
-        HashMap<String,String> storeMap = json_map.jsonmap();
         String botAns = "";
         try{
             String request = CurlRequest.curlRequests("https://www.cheapshark.com/api/1.0/games?title="+ str);

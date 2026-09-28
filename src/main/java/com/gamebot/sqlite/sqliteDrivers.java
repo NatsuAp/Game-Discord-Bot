@@ -1,7 +1,10 @@
 package com.gamebot.sqlite;
 
+import com.gamebot.main;
 import com.google.gson.*;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -16,8 +19,9 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 //    For INSERT, UPDATE or DELETE use the executeUpdate() method
 //    and for SELECT use the executeQuery() method which returns the ResultSet.
     public static Connection conn = null;
-    public static void connect(){
-        String url = "jdbc:sqlite:src/main/resources/db/datitoData.db";
+    public static void connect() throws URISyntaxException {
+
+        String url = "jdbc:sqlite:src/main/resources/datitoData.db";
 
         try{
             conn = DriverManager.getConnection(url);

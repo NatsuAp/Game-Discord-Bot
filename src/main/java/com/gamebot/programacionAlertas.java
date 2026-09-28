@@ -31,6 +31,7 @@ public class programacionAlertas {
     //En la llamada a la api, la api filtra los id repetidos y no los pone en la respuesta
     private static void verificarPrecio() throws SQLException {
         System.out.println("Se esta verificando el precio\n");
+
         ArrayList<Usuario> usuarios= sqliteDrivers.obtenerUsuarios();
         HashSet<Integer> idJuegos = new HashSet<>();
         //HashSet<Juego> juegos= new HashSet<>();
@@ -72,7 +73,9 @@ public class programacionAlertas {
         int IdTienda =-1;
         String IdLink = "";
         float precio = -1f;
+
         for(JsonElement element : deals){
+
             JsonObject ob = element.getAsJsonObject();
             JsonObject infoObj = ob.getAsJsonObject("info");
             id = infoObj.get("gameID").getAsInt();

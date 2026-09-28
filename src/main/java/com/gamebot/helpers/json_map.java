@@ -9,6 +9,7 @@ public class json_map {
     //Store ID, StoreName
     public static HashMap<String,String> jsonmap() throws IOException {
         HashMap<String,String> map = new HashMap<>();
+        System.out.println("store requests called");
 
         String request = CurlRequest.curlRequests("https://www.cheapshark.com/api/1.0/stores");
         JsonArray jsonArray = JsonParser.parseString(request).getAsJsonArray();

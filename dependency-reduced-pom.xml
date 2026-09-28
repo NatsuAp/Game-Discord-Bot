@@ -8,7 +8,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -16,6 +16,24 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>**/*.jks</exclude>
+                    <exclude>**/*.so</exclude>
+                    <exclude>**/*.dll</exclude>
+                    <exclude>**/*.dylib</exclude>
+                    <exclude>**/help/**</exclude>
+                    <exclude>**/*.html</exclude>
+                    <exclude>**/*.xml</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <minimizeJar>true</minimizeJar>
               <transformers>
                 <transformer>
                   <mainClass>com.gamebot.main</mainClass>
